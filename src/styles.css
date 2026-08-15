@@ -1,0 +1,40 @@
+:root {
+  font-family: Georgia, 'Times New Roman', serif;
+  color: #29251f;
+  background: #f4f0e8;
+  font-synthesis: none;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; background: #f4f0e8; }
+button, input { font: inherit; }
+.shell { min-height:100vh; max-width:780px; margin:0 auto; padding:calc(30px + env(safe-area-inset-top)) 22px calc(48px + env(safe-area-inset-bottom)); }
+.topbar { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:54px; }
+.brand { letter-spacing:.16em; text-transform:uppercase; font-size:.78rem; }
+.iconbtn { border:1px solid rgba(41,37,31,.24); background:transparent; border-radius:999px; padding:9px 13px; cursor:pointer; }
+.hero { text-align:center; margin-bottom:48px; }
+.eyebrow { text-transform:uppercase; letter-spacing:.14em; font-size:.78rem; opacity:.64; }
+h1 { font-weight:400; font-size:clamp(2.45rem,9vw,4.8rem); line-height:.95; margin:12px 0 14px; }
+.sub { font-size:1rem; opacity:.7; }
+.office-switch { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:30px auto 0; max-width:430px; }
+.office-switch button { padding:13px 16px; border-radius:999px; border:1px solid rgba(41,37,31,.24); background:transparent; cursor:pointer; }
+.office-switch button.active { background:#29251f; color:#f4f0e8; }
+.card { border-top:1px solid rgba(41,37,31,.22); padding:24px 0; }
+.card h2 { font-size:1rem; text-transform:uppercase; letter-spacing:.12em; font-weight:400; opacity:.62; margin:0 0 14px; }
+.psalms { font-size:clamp(1.6rem,6vw,2.5rem); line-height:1.15; margin:0; }
+.notice { font-family:system-ui,sans-serif; font-size:.85rem; line-height:1.5; padding:14px 16px; background:rgba(41,37,31,.06); border-radius:10px; }
+.sequence { list-style:none; padding:0; margin:0; counter-reset:item; }
+.sequence li { counter-increment:item; display:grid; grid-template-columns:2.1rem 1fr; gap:10px; padding:14px 0; border-bottom:1px solid rgba(41,37,31,.10); font-size:1.08rem; }
+.sequence li::before { content:counter(item, decimal-leading-zero); font-family:system-ui,sans-serif; font-size:.7rem; opacity:.42; padding-top:.35rem; }
+.nav { display:flex; gap:10px; justify-content:center; margin-top:38px; }
+.datepick { border:0; border-bottom:1px solid rgba(41,37,31,.35); background:transparent; padding:8px; }
+@media (prefers-color-scheme: dark) {
+  :root, body { color:#eee8de; background:#1e1c19; }
+  .office-switch button.active { background:#eee8de; color:#1e1c19; }
+  .notice { background:rgba(255,255,255,.07); }
+  .iconbtn,.office-switch button { border-color:rgba(255,255,255,.24); }
+  .card { border-color:rgba(255,255,255,.18); }
+  .sequence li { border-color:rgba(255,255,255,.10); }
+  .datepick { color:inherit; border-color:rgba(255,255,255,.3); }
+}
+.lesson{display:flex;justify-content:space-between;gap:1rem;padding:.8rem 0;border-bottom:1px solid rgba(0,0,0,.08)}
+.lesson span{opacity:.65}.lesson strong{text-align:right}.source-note{font-size:.82rem;opacity:.55;margin-top:1rem}
