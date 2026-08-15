@@ -76,3 +76,7 @@ The next useful build is the reader experience rather than more lectionary data:
 - Appearance preferences.
 - Better app icons and installation polish.
 - Further historical verification of Sunday/Holy-Day collision precedence.
+
+
+## V0.2.1 GitHub Pages fix
+Asset, manifest, service-worker and icon paths are now relative so the app works when hosted under a GitHub Pages project path such as `/Pray1662/`.

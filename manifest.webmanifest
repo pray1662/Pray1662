@@ -2,13 +2,13 @@
   "name": "1662 Daily Prayer",
   "short_name": "1662 Prayer",
   "description": "A focused, offline-ready reader for the original 1662 Book of Common Prayer Daily Office pattern.",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#f4f0e8",
   "theme_color": "#f4f0e8",
   "icons": [
     {
-      "src": "/icons/icon.svg",
+      "src": "./icons/icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"

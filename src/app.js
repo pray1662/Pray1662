@@ -35,5 +35,5 @@ function render() {
   document.querySelector('#next').addEventListener('click',()=>{ state.date=addDays(state.date,1); render(); });
   document.querySelector('#datepick').addEventListener('change',e=>{ const [y,m,d]=e.target.value.split('-').map(Number); state.date=new Date(y,m-1,d); render(); });
 }
-if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('/service-worker.js'));
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js'));
 render();
