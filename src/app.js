@@ -139,8 +139,7 @@ function settingsMenu() {
     </div>
     <div class="menu-section"><div class="menu-label">Language</div>
       <div class="segmented"><button class="active">1662</button><button disabled title="Contemporary language mode is planned for the next release">Contemporary</button></div>
-      <p class="menu-note">Contemporary language is planned next and will use a cleaner modern typeface.</p>
-    </div>
+<p class="menu-note">Contemporary language will be added.</p>    </div>
     <div class="menu-section"><div class="menu-label">Accessibility</div>
       <label class="check-row"><input id="dyslexicToggle" type="checkbox" ${state.dyslexic?'checked':''}><span><strong>Dyslexia-friendly text</strong><small>OpenDyslexic, larger type and wider line spacing</small></span></label>
     </div>
