@@ -1,4 +1,4 @@
-const CACHE = '1662-daily-prayer-v0.2.2';
+const CACHE = '1662-daily-prayer-v0.3.0';
 const ASSETS = [
   './index.html',
   './manifest.webmanifest',
@@ -9,6 +9,7 @@ const ASSETS = [
   './data/psalter.js',
   './data/lectionary.js',
   './data/ordinary-lessons.js',
+  './data/liturgy.js',
   './icons/icon.svg'
 ];
 

@@ -1,4 +1,8 @@
-# 1662 Daily Prayer — V0.2
+# Pray 1662 — V0.3
+
+A static Progressive Web App for the original 1662 Daily Office pattern. V0.3 adds the principal fixed liturgical text of Morning and Evening Prayer, expandable Overview and Continuous modes, and a step-by-step Focus mode. Scripture remains references-only so the app is intentionally paired with a physical Bible.
+
+**Prototype note:** the Collect of the Day remains a visible placeholder pending the verified Collect/calendar dataset. Substantial BCP text should not be treated as cleared for unrestricted public republication until the relevant Crown Patentee permission has been resolved.
 
 A small installable web app for Morning and Evening Prayer according to the original 1662 Book of Common Prayer lectionary pattern.
 
@@ -78,10 +82,10 @@ The next useful build is the reader experience rather than more lectionary data:
 - Further historical verification of Sunday/Holy-Day collision precedence.
 
 
-## V0.2.2 GitHub Pages fix
+## V0.3 GitHub Pages fix
 Asset, manifest, service-worker and icon paths are now relative so the app works when hosted under a GitHub Pages project path such as `/Pray1662/`.
 
 
-## V0.2.2 browser compatibility fix
+## V0.3 browser compatibility fix
 
 GitHub Pages serves this project directly as static files. CSS is therefore linked from `index.html` rather than imported from JavaScript. Native browser ES modules do not support `import './styles.css'` without a bundler such as Vite. This release removes the unused Vite build dependency and has been tested both at the domain root and from a `/Pray1662/` subpath matching GitHub Pages project hosting.
