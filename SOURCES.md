@@ -20,3 +20,9 @@ The app intentionally contains Scripture references only. It does not reproduce 
 ## Lectionary and Psalter
 
 The ordinary lesson table, Sunday/Holy-Day overrides, proper Psalms and 30-day Psalter logic are retained from V0.2.x and remain covered by the project test suite.
+
+
+## v0.5 additions
+
+- Fixed Holy Day collect names and text checked against the Church of England's 1662 BCP Collects, Epistles and Gospels index and historic 1662 text sources.
+- OpenDyslexic is loaded at runtime rather than bundled; the current OpenDyslexic project states that its newest version is under the SIL Open Font License.

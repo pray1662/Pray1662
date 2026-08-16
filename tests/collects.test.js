@@ -32,3 +32,19 @@ test('all encoded collect texts end with Amen', async () => {
     assert.match(collect.text, /Amen\.$/, `${key} should end with Amen.`);
   }
 });
+
+
+test('fixed Holy Days use their proper collect', () => {
+  assert.equal(getCollectsForDate(new Date(2026, 10, 30), 'morning')[0].key, 'st-andrew');
+  assert.equal(getCollectsForDate(new Date(2026, 10, 1), 'morning')[0].key, 'all-saints');
+  assert.equal(getCollectsForDate(new Date(2026, 5, 24), 'morning')[0].key, 'st-john-baptist');
+});
+
+test('Easter and Whitsun weekdays use their proper collects', () => {
+  assert.equal(getCollectsForDate(new Date(2027, 2, 29), 'morning')[0].key, 'easter-monday');
+  assert.equal(getCollectsForDate(new Date(2027, 4, 17), 'morning')[0].key, 'whit-monday');
+});
+
+test('Good Friday uses its proper collect', () => {
+  assert.equal(getCollectsForDate(new Date(2027, 2, 26), 'morning')[0].key, 'good-friday');
+});

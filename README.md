@@ -96,3 +96,14 @@ GitHub Pages serves this project directly as static files. CSS is therefore link
 - Removed global smooth scrolling from Focus navigation.
 - Removed menu backdrop blur to reduce compositing load on mobile Safari.
 - Static assets now refresh in the background when online.
+
+
+## v0.5 changes
+
+- Complete fixed red-letter Holy Day collect layer for the calendar keys used by the app.
+- Good Friday, Easter Monday/Tuesday, and Whitsun Monday/Tuesday collect handling.
+- Three-dot menu closes when tapping outside it.
+- Psalms now say **Read from your Bible**.
+- Dyslexia-friendly text option: OpenDyslexic (loaded from the jsDelivr CDN), approximately +3pt base size, and increased line spacing. The preference is remembered locally.
+- Mobile Add-to-Home-Screen prompt. iOS explains Safari Share → Add to Home Screen; supported Android browsers use the native install prompt.
+- Updated cache version for deployment.

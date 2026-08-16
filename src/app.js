@@ -3,6 +3,7 @@ import { buildOffice } from './office.js';
 import { fixed } from '../data/liturgy.js';
 
 const savedTheme = localStorage.getItem('pray1662-theme');
+const savedDyslexic = localStorage.getItem('pray1662-dyslexic') === 'true';
 const state = {
   date: new Date(),
   office: new Date().getHours() < 12 ? 'morning' : 'evening',
@@ -11,12 +12,14 @@ const state = {
   canticleChoice: 'teDeum',
   theme: savedTheme === 'dark' || savedTheme === 'light' ? savedTheme : 'dark',
   menuOpen: false,
-  language: 'traditional'
+  language: 'traditional',
+  dyslexic: savedDyslexic
 };
 
 function applyTheme() {
   document.documentElement.dataset.theme = state.theme;
   document.documentElement.dataset.language = state.language;
+  document.documentElement.dataset.dyslexic = state.dyslexic ? 'true' : 'false';
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content', state.theme === 'dark' ? '#2F4654' : '#EFEAE2');
 }
 
@@ -49,7 +52,7 @@ function fixedPanel(id, open=false) {
 }
 
 function appointmentPanel(item, open=false) {
-  const label = item.kind === 'lesson' ? 'Read from your Bible' : 'Appointed for this office';
+  const label = 'Read from your Bible';
   return `<details class="office-item appointment" ${open ? 'open' : ''}>
     <summary><span>${esc(item.title)}</span><small>${esc(item.value || '')}</small></summary>
     <div class="office-text appointment-body">
@@ -114,7 +117,7 @@ function focusCard(item, index, total) {
     body=`<div class="focus-reference">${esc(item.value || 'Not appointed')}</div><p class="rubric">Read this lesson from your Bible, then continue.</p>`;
   } else if (item.kind === 'psalms') {
     title=item.title; subtitle=item.value;
-    body=`<div class="focus-reference">${esc(item.value)}</div><p class="rubric">Read or sing the appointed Psalms from your Prayer Book or Psalter.</p>`;
+    body=`<div class="focus-reference">${esc(item.value)}</div><p class="rubric">Read from your Bible.</p>`;
   } else if (item.kind === 'collect') {
     const list = item.collects || [];
     title='The Collect of the Day'; subtitle=list.map(c=>c.title).join(' · ');
@@ -135,11 +138,44 @@ function settingsMenu() {
       <div class="segmented"><button data-theme="light" class="${state.theme==='light'?'active':''}">Day</button><button data-theme="dark" class="${state.theme==='dark'?'active':''}">Night</button></div>
     </div>
     <div class="menu-section"><div class="menu-label">Language</div>
-      <div class="segmented"><button class="active">1662</button><button disabled title="Contemporary language mode is planned for a later release">Contemporary</button></div>
-      <p class="menu-note">Contemporary language will use a cleaner modern typeface when the text layer is added.</p>
+      <div class="segmented"><button class="active">1662</button><button disabled title="Contemporary language mode is planned for the next release">Contemporary</button></div>
+      <p class="menu-note">Contemporary language is planned next and will use a cleaner modern typeface.</p>
     </div>
+    <div class="menu-section"><div class="menu-label">Accessibility</div>
+      <label class="check-row"><input id="dyslexicToggle" type="checkbox" ${state.dyslexic?'checked':''}><span><strong>Dyslexia-friendly text</strong><small>OpenDyslexic, larger type and wider line spacing</small></span></label>
+    </div>
+    <div class="menu-section install-menu-section" id="installMenuSection"><button class="menu-today" id="installApp">Add Pray1662 to Home Screen</button></div>
     <button class="menu-today" id="today">Return to today</button>
   </div>`;
+}
+
+let deferredInstallPrompt = null;
+
+function isStandalone() {
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+
+function isMobile() {
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || window.matchMedia('(max-width: 760px)').matches;
+}
+
+function isIOS() { return /iPhone|iPad|iPod/i.test(navigator.userAgent); }
+
+function shouldShowInstallNudge() {
+  return isMobile() && !isStandalone() && localStorage.getItem('pray1662-install-dismissed') !== 'true';
+}
+
+function installNudge() {
+  if (!shouldShowInstallNudge()) return '';
+  const copy = isIOS()
+    ? 'Tap the Share button in Safari, then choose “Add to Home Screen”.'
+    : 'Add Pray1662 to your Home Screen so it opens like an app.';
+  return `<aside class="install-nudge" id="installNudge" aria-label="Add Pray1662 to Home Screen">
+    <button class="nudge-close" id="dismissInstall" aria-label="Dismiss">×</button>
+    <div class="install-icon">${isIOS() ? '↥' : '+'}</div>
+    <div><strong>Add Pray1662 to your Home Screen</strong><p>${esc(copy)}</p></div>
+    <button class="nudge-action" id="installNudgeAction">${isIOS() ? 'Got it' : 'Add'}</button>
+  </aside>`;
 }
 
 function render() {
@@ -170,6 +206,7 @@ function render() {
       </div>
     </section>
     ${main}
+    ${installNudge()}
     <footer class="footer">1662 Daily Prayer · Scripture references only · Designed to be used with a physical Bible</footer>
   </div>`;
 
@@ -223,6 +260,21 @@ appRoot.addEventListener('click', event => {
       state.menuOpen = !state.menuOpen;
       render();
       break;
+    case 'dismissInstall':
+      localStorage.setItem('pray1662-install-dismissed','true');
+      render();
+      break;
+    case 'installNudgeAction':
+      if (isIOS() && !deferredInstallPrompt) {
+        localStorage.setItem('pray1662-install-dismissed','true');
+        render();
+      } else {
+        handleInstallRequest();
+      }
+      break;
+    case 'installApp':
+      handleInstallRequest();
+      break;
     case 'today':
       state.date = new Date();
       state.focusIndex = 0;
@@ -264,11 +316,56 @@ appRoot.addEventListener('click', event => {
 });
 
 appRoot.addEventListener('change', event => {
+  if (event.target.id === 'dyslexicToggle') {
+    state.dyslexic = event.target.checked;
+    localStorage.setItem('pray1662-dyslexic', String(state.dyslexic));
+    applyTheme();
+    return;
+  }
   if (event.target.id !== 'datepick') return;
   const [y,m,d] = event.target.value.split('-').map(Number);
   if (!y || !m || !d) return;
   state.date = new Date(y, m - 1, d);
   state.focusIndex = 0;
+  render();
+});
+
+document.addEventListener('pointerdown', event => {
+  if (!state.menuOpen) return;
+  if (event.target.closest('#menuCard') || event.target.closest('#menuButton')) return;
+  state.menuOpen = false;
+  render();
+});
+
+async function handleInstallRequest() {
+  if (isStandalone()) return;
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    localStorage.setItem('pray1662-install-dismissed','true');
+    render();
+    return;
+  }
+  if (isIOS()) {
+    localStorage.removeItem('pray1662-install-dismissed');
+    state.menuOpen = false;
+    render();
+    return;
+  }
+  localStorage.removeItem('pray1662-install-dismissed');
+  state.menuOpen = false;
+  render();
+}
+
+window.addEventListener('beforeinstallprompt', event => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null;
+  localStorage.setItem('pray1662-install-dismissed','true');
   render();
 });
 

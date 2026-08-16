@@ -1,3 +1,8 @@
+@font-face {
+  font-family:'OpenDyslexicRemote';
+  src:url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/woff/OpenDyslexic-Regular.woff') format('woff');
+  font-style:normal; font-weight:400; font-display:swap;
+}
 :root {
   --bg:#EFEAE2;
   --text:#1F201E;
@@ -95,3 +100,23 @@ button { -webkit-tap-highlight-color:transparent; }
   .office-item summary::after { display:none; }
   .response-line { grid-template-columns:4.5rem 1fr; }
 }
+
+:root[data-dyslexic="true"] { font-family:'OpenDyslexicRemote', Arial, sans-serif; font-size:calc(100% + 3pt); }
+:root[data-dyslexic="true"] .office-text,
+:root[data-dyslexic="true"] .focus-copy { line-height:1.9; }
+:root[data-dyslexic="true"] .office-item summary small,
+:root[data-dyslexic="true"] .footer,
+:root[data-dyslexic="true"] .menu-note { line-height:1.65; }
+.check-row { display:flex; align-items:flex-start; gap:11px; cursor:pointer; font-family:system-ui,sans-serif; }
+.check-row input { width:20px; height:20px; margin:1px 0 0; accent-color:var(--text); flex:0 0 auto; }
+.check-row strong { display:block; font-size:.88rem; font-weight:600; }
+.check-row small { display:block; color:var(--muted); margin-top:3px; font-size:.72rem; line-height:1.4; }
+.install-menu-section .menu-today { margin-top:0; }
+.install-nudge { position:fixed; z-index:30; left:50%; bottom:calc(18px + env(safe-area-inset-bottom)); transform:translateX(-50%); width:min(470px,calc(100vw - 24px)); display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:center; padding:14px 14px 14px 16px; border:1px solid var(--line); border-radius:18px; background:var(--surface); box-shadow:0 14px 44px rgba(0,0,0,.2); font-family:system-ui,sans-serif; }
+.install-nudge strong { display:block; font-size:.83rem; }
+.install-nudge p { margin:3px 0 0; font-size:.7rem; line-height:1.4; color:var(--muted); }
+.install-icon { width:34px; height:34px; border:1px solid var(--line); border-radius:10px; display:grid; place-items:center; font-size:1.15rem; }
+.nudge-close { position:absolute; top:-9px; right:-7px; width:25px; height:25px; border-radius:999px; border:1px solid var(--line); background:var(--surface); cursor:pointer; padding:0; }
+.nudge-action { border:1px solid var(--line); border-radius:999px; background:var(--text); color:var(--bg); padding:8px 11px; cursor:pointer; font-size:.72rem; white-space:nowrap; }
+@media (min-width:761px) { .install-nudge { display:none; } }
+@media (max-width:420px) { .install-nudge { grid-template-columns:auto 1fr; } .nudge-action { grid-column:2; justify-self:start; } }

@@ -205,6 +205,114 @@ export const collects = {
     "title": "The Twenty-fifth Sunday after Trinity",
     "text": "STIR up, we beseech thee, O Lord, the wills of thy faithful people; that they, plenteously bringing forth the fruit of good works, may of thee be plenteously rewarded, through Jesus Christ our Lord. Amen."
   },
+  "circumcision": {
+    "title": "The Circumcision of Christ",
+    "text": "Almighty God, who madest thy blessed Son to be circumcised, and obedient to the law for man; Grant us the true Circumcision of the Spirit; that, our hearts, and all our members, being mortified from all worldly and carnal lusts, we may in all things obey thy blessed will; through the same thy Son Jesus Christ our Lord. Amen."
+  },
+  "conversion-st-paul": {
+    "title": "The Conversion of Saint Paul",
+    "text": "O God, who, through the preaching of the blessed Apostle Saint Paul, hast caused the light of the Gospel to shine throughout the world; Grant, we beseech thee, that we, having his wonderful conversion in remembrance, may shew forth our thankfulness unto thee for the same, by following the holy doctrine which he taught; through Jesus Christ our Lord. Amen."
+  },
+  "purification": {
+    "title": "The Purification of Saint Mary the Virgin",
+    "text": "Almighty and everlasting God, we humbly beseech thy Majesty, that, as thy only-begotten Son was this day presented in the temple in substance of our flesh; so we may be presented unto thee with pure and clean hearts, by the same thy Son Jesus Christ our Lord. Amen."
+  },
+  "st-matthias": {
+    "title": "Saint Matthias's Day",
+    "text": "O Almighty God, who into the place of the traitor Judas didst choose thy faithful servant Matthias to be of the number of the twelve Apostles; Grant that thy Church, being alway preserved from false Apostles, may be ordered and guided by faithful and true pastors; through Jesus Christ our Lord. Amen."
+  },
+  "annunciation": {
+    "title": "The Annunciation of the Blessed Virgin Mary",
+    "text": "We beseech thee, O Lord, pour thy grace into our hearts; that, as we have known the incarnation of thy Son Jesus Christ by the message of an Angel, so by his cross and passion we may be brought unto the glory of his resurrection; through the same Jesus Christ our Lord. Amen."
+  },
+  "st-mark": {
+    "title": "Saint Mark's Day",
+    "text": "O Almighty God, who hast instructed thy holy Church with the heavenly doctrine of thy Evangelist Saint Mark; Give us grace, that, being not like children carried away with every blast of vain doctrine, we may be established in the truth of thy holy Gospel; through Jesus Christ our Lord. Amen."
+  },
+  "st-philip-james": {
+    "title": "Saint Philip and Saint James's Day",
+    "text": "O Almighty God, whom truly to know is everlasting life; Grant us perfectly to know thy Son Jesus Christ to be the way, the truth, and the life; that, following the steps of thy holy Apostles, Saint Philip and Saint James, we may stedfastly walk in the way that leadeth to eternal life; through the same thy Son Jesus Christ our Lord. Amen."
+  },
+  "st-barnabas": {
+    "title": "Saint Barnabas the Apostle",
+    "text": "O Lord God Almighty, who didst endue thy holy Apostle Barnabas with singular gifts of the Holy Ghost; Leave us not, we beseech thee, destitute of thy manifold gifts, nor yet of grace to use them alway to thy honour and glory; through Jesus Christ our Lord. Amen."
+  },
+  "st-john-baptist": {
+    "title": "Saint John Baptist's Day",
+    "text": "Almighty God, by whose providence thy servant John Baptist was wonderfully born, and sent to prepare the way of thy Son our Saviour, by preaching of repentance; Make us so to follow his doctrine and holy life, that we may truly repent according to his preaching; and after his example constantly speak the truth, boldly rebuke vice, and patiently suffer for the truth's sake; through Jesus Christ our Lord. Amen."
+  },
+  "st-peter": {
+    "title": "Saint Peter's Day",
+    "text": "O Almighty God, who by thy Son Jesus Christ didst give to thy Apostle Saint Peter many excellent gifts, and commandedst him earnestly to feed thy flock; Make, we beseech thee, all Bishops and Pastors diligently to preach thy holy Word, and the people obediently to follow the same, that they may receive the crown of everlasting glory; through Jesus Christ our Lord. Amen."
+  },
+  "st-james": {
+    "title": "Saint James the Apostle",
+    "text": "Grant, O merciful God, that, as thine holy Apostle Saint James, leaving his father and all that he had, without delay was obedient unto the calling of thy Son Jesus Christ, and followed him; so we, forsaking all worldly and carnal affections, may be evermore ready to follow thy holy commandments; through Jesus Christ our Lord. Amen."
+  },
+  "st-bartholomew": {
+    "title": "Saint Bartholomew the Apostle",
+    "text": "O Almighty and everlasting God, who didst give to thine Apostle Bartholomew grace truly to believe and to preach thy Word; Grant, we beseech thee, unto thy Church, to love that Word which he believed, and both to preach and receive the same; through Jesus Christ our Lord. Amen."
+  },
+  "st-matthew": {
+    "title": "Saint Matthew the Apostle",
+    "text": "O Almighty God, who by thy blessed Son didst call Matthew from the receipt of custom to be an Apostle and Evangelist; Grant us grace to forsake all covetous desires and inordinate love of riches, and to follow the same thy Son Jesus Christ, who liveth and reigneth with thee and the Holy Ghost, one God, world without end. Amen."
+  },
+  "st-michael": {
+    "title": "Saint Michael and All Angels",
+    "text": "O everlasting God, who hast ordained and constituted the services of Angels and men in a wonderful order; Mercifully grant, that as thy holy Angels alway do thee service in heaven, so by thy appointment they may succour and defend us on earth; through Jesus Christ our Lord. Amen."
+  },
+  "st-luke": {
+    "title": "Saint Luke the Evangelist",
+    "text": "Almighty God, who calledst Luke the Physician, whose praise is in the Gospel, to be an Evangelist, and Physician of the soul; May it please thee, that, by the wholesome medicines of the doctrine delivered by him, all the diseases of our souls may be healed; through the merits of thy Son Jesus Christ our Lord. Amen."
+  },
+  "st-simon-jude": {
+    "title": "Saint Simon and Saint Jude, Apostles",
+    "text": "O Almighty God, who hast built thy Church upon the foundation of the Apostles and Prophets, Jesus Christ himself being the head corner-stone; Grant us so to be joined together in unity of spirit by their doctrine, that we may be made an holy temple acceptable unto thee; through Jesus Christ our Lord. Amen."
+  },
+  "all-saints": {
+    "title": "All Saints' Day",
+    "text": "O Almighty God, who hast knit together thine elect in one communion and fellowship, in the mystical body of thy Son Christ our Lord; Grant us grace so to follow thy blessed Saints in all virtuous and godly living, that we may come to those unspeakable joys, which thou hast prepared for them that unfeignedly love thee; through Jesus Christ our Lord. Amen."
+  },
+  "st-andrew": {
+    "title": "Saint Andrew's Day",
+    "text": "Almighty God, who didst give such grace unto thy holy Apostle Saint Andrew, that he readily obeyed the calling of thy Son Jesus Christ, and followed him without delay; Grant unto us all, that we, being called by thy holy Word, may forthwith give up ourselves obediently to fulfil thy holy commandments; through the same Jesus Christ our Lord. Amen."
+  },
+  "st-thomas": {
+    "title": "Saint Thomas the Apostle",
+    "text": "Almighty and everlasting God, who for the more confirmation of the faith didst suffer thy holy Apostle Thomas to be doubtful in thy Son's resurrection; Grant us so perfectly, and without all doubt, to believe in thy Son Jesus Christ, that our faith in thy sight may never be reproved. Hear us, O Lord, through the same Jesus Christ, to whom, with thee and the Holy Ghost, be all honour and glory, now and for evermore. Amen."
+  },
+  "st-stephen": {
+    "title": "Saint Stephen's Day",
+    "text": "Grant, O Lord, that, in all our sufferings here upon earth for the testimony of thy truth, we may stedfastly look up to heaven, and by faith behold the glory that shall be revealed; and, being filled with the Holy Ghost, may learn to love and bless our persecutors by the example of thy first Martyr Saint Stephen, who prayed for his murderers to thee, O blessed Jesus, who standest at the right hand of God to succour all those that suffer for thee, our only Mediator and Advocate. Amen."
+  },
+  "st-john": {
+    "title": "Saint John the Evangelist's Day",
+    "text": "Merciful Lord, we beseech thee to cast thy bright beams of light upon thy Church, that it, being enlightened by the doctrine of thy blessed Apostle and Evangelist Saint John, may so walk in the light of thy truth, that it may at length attain to the light of everlasting life; through Jesus Christ our Lord. Amen."
+  },
+  "innocents": {
+    "title": "The Innocents' Day",
+    "text": "O Almighty God, who out of the mouths of babes and sucklings hast ordained strength, and madest infants to glorify thee by their deaths; Mortify and kill all vices in us, and so strengthen us by thy grace, that by the innocency of our lives, and constancy of our faith even unto death, we may glorify thy holy Name; through Jesus Christ our Lord. Amen."
+  },
+  "good-friday": {
+    "title": "Good Friday",
+    "text": "Almighty God, we beseech thee graciously to behold this thy family, for which our Lord Jesus Christ was contented to be betrayed, and given up into the hands of wicked men, and to suffer death upon the cross, who now liveth and reigneth with thee and the Holy Ghost, ever one God, world without end. Amen."
+  },
+  "easter-monday": {
+    "title": "Monday in Easter Week",
+    "text": "Almighty God, who through thy only-begotten Son Jesus Christ hast overcome death, and opened unto us the gate of everlasting life; We humbly beseech thee, that, as by thy special grace preventing us thou dost put into our minds good desires, so by thy continual help we may bring the same to good effect; through Jesus Christ our Lord, who liveth and reigneth with thee and the Holy Ghost, ever one God, world without end. Amen."
+  },
+  "easter-tuesday": {
+    "title": "Tuesday in Easter Week",
+    "text": "Almighty God, who through thy only-begotten Son Jesus Christ hast overcome death, and opened unto us the gate of everlasting life; We humbly beseech thee, that, as by thy special grace preventing us thou dost put into our minds good desires, so by thy continual help we may bring the same to good effect; through Jesus Christ our Lord, who liveth and reigneth with thee and the Holy Ghost, ever one God, world without end. Amen."
+  },
+  "whit-monday": {
+    "title": "Monday in Whitsun Week",
+    "text": "God, who as at this time didst teach the hearts of thy faithful people, by the sending to them the light of thy Holy Spirit; Grant us by the same Spirit to have a right judgement in all things, and evermore to rejoice in his holy comfort; through the merits of Christ Jesus our Saviour, who liveth and reigneth with thee, in the unity of the same Spirit, one God, world without end. Amen."
+  },
+  "whit-tuesday": {
+    "title": "Tuesday in Whitsun Week",
+    "text": "God, who as at this time didst teach the hearts of thy faithful people, by the sending to them the light of thy Holy Spirit; Grant us by the same Spirit to have a right judgement in all things, and evermore to rejoice in his holy comfort; through the merits of Christ Jesus our Saviour, who liveth and reigneth with thee, in the unity of the same Spirit, one God, world without end. Amen."
+  },
   "nativity": {
     "title": "The Nativity of our Lord",
     "text": "Almighty God, who hast given us thy only-begotten Son to take our nature upon him, and as at this time to be born of a pure Virgin; Grant that we being regenerate, and made thy children by adoption and grace, may daily be renewed by thy Holy Spirit; through the same our Lord Jesus Christ, who liveth and reigneth with thee and the same Spirit, ever one God, world without end. Amen."
@@ -242,6 +350,10 @@ function previousSunday(date) {
 
 function normalSundayKey(date) {
   const sunday = previousSunday(date);
+  // If the preceding Sunday was itself a major Holy Day, its proper collect
+  // is the Sunday collect carried through the following week.
+  const sundayHoly = majorProperKey(sunday);
+  if (sundayHoly) return sundayHoly;
   let key = sundayProperKey(sunday);
   // The 1662 table provides only one Sunday after Christmas Day.
   if (key?.startsWith('after-christmas-')) key = 'after-christmas-1';
@@ -258,8 +370,15 @@ function normalSundayKey(date) {
 
 function majorProperKey(date) {
   const holy = holyDayKey(date);
-  const supported = new Set(['nativity','epiphany','ash-wednesday','easter-day','ascension-day','whitsunday']);
-  if (supported.has(holy)) return holy;
+  const aliases = {
+    'easter-day':'easter-day',
+    'monday-in-easter-week':'easter-monday',
+    'tuesday-in-easter-week':'easter-tuesday',
+    'monday-in-whitsun-week':'whit-monday',
+    'tuesday-in-whitsun-week':'whit-tuesday'
+  };
+  const key = aliases[holy] || holy;
+  if (key && collects[key]) return key;
   if (sameDate(date, moveableDays(date.getFullYear()).trinitySunday)) return 'trinity-sunday';
   return null;
 }
@@ -269,13 +388,16 @@ export function getCollectsForDate(date, office = 'morning') {
   const proper = majorProperKey(date);
   if (proper) keys.push(proper);
   else {
-    // At Saturday Evening Prayer the coming Sunday's collect is anticipated,
-    // following the BCP rubric that a Sunday collect is said at the
-    // Evening Service next before. Otherwise weekdays retain the preceding
-    // Sunday's collect.
+    // At Saturday Evening Prayer the coming Sunday's collect is anticipated.
+    // If that Sunday is itself a major Holy Day, anticipate that proper
+    // rather than trying to resolve it as an ordinary Sunday.
     const collectDate = office === 'evening' && date.getDay() === 6 ? addDays(date, 1) : date;
-    const sunday = normalSundayKey(collectDate);
-    if (sunday) keys.push(sunday);
+    const anticipatedProper = collectDate !== date ? majorProperKey(collectDate) : null;
+    if (anticipatedProper) keys.push(anticipatedProper);
+    else {
+      const sunday = normalSundayKey(collectDate);
+      if (sunday) keys.push(sunday);
+    }
   }
 
   // 1662 explicitly orders the First Advent collect to be repeated daily
