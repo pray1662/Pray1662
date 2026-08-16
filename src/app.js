@@ -173,20 +173,104 @@ function render() {
     <footer class="footer">1662 Daily Prayer · Scripture references only · Designed to be used with a physical Bible</footer>
   </div>`;
 
-  document.querySelectorAll('[data-office]').forEach(btn => btn.addEventListener('click', () => { state.office = btn.dataset.office; state.focusIndex=0; state.menuOpen=false; render(); }));
-  document.querySelectorAll('[data-mode]').forEach(btn => btn.addEventListener('click', () => { state.mode = btn.dataset.mode; state.focusIndex=0; state.menuOpen=false; render(); }));
-  document.querySelectorAll('[data-canticle]').forEach(btn => btn.addEventListener('click', e => { e.preventDefault(); state.canticleChoice = btn.dataset.canticle; render(); }));
-  document.querySelectorAll('[data-theme]').forEach(btn => btn.addEventListener('click', () => { state.theme=btn.dataset.theme; localStorage.setItem('pray1662-theme',state.theme); render(); }));
-  document.querySelector('#menuButton')?.addEventListener('click',()=>{ state.menuOpen=!state.menuOpen; render(); });
-  document.querySelector('#today')?.addEventListener('click',()=>{ state.date=new Date(); state.focusIndex=0; state.menuOpen=false; render(); });
-  document.querySelector('#prevTop')?.addEventListener('click',()=>{ state.date=addDays(state.date,-1); state.focusIndex=0; render(); });
-  document.querySelector('#nextTop')?.addEventListener('click',()=>{ state.date=addDays(state.date,1); state.focusIndex=0; render(); });
-  document.querySelector('#datepick')?.addEventListener('change',e=>{ const [y,m,d]=e.target.value.split('-').map(Number); state.date=new Date(y,m-1,d); state.focusIndex=0; render(); });
-  document.querySelector('#focusPrev')?.addEventListener('click',()=>{ if(state.focusIndex>0){state.focusIndex--;render();window.scrollTo(0,0);} });
-  document.querySelector('#focusNext')?.addEventListener('click',()=>{
-    if(state.focusIndex < office.items.length-1){state.focusIndex++;render();window.scrollTo(0,0);} else { state.mode='overview'; state.focusIndex=0; render(); window.scrollTo(0,0); }
-  });
 }
+
+const appRoot = document.querySelector('#app');
+
+function goTop() {
+  window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+}
+
+appRoot.addEventListener('click', event => {
+  const btn = event.target.closest('button');
+  if (!btn || !appRoot.contains(btn)) return;
+
+  if (btn.dataset.office) {
+    state.office = btn.dataset.office;
+    state.focusIndex = 0;
+    state.menuOpen = false;
+    render();
+    return;
+  }
+
+  if (btn.dataset.mode) {
+    state.mode = btn.dataset.mode;
+    state.focusIndex = 0;
+    state.menuOpen = false;
+    render();
+    return;
+  }
+
+  if (btn.dataset.canticle) {
+    event.preventDefault();
+    state.canticleChoice = btn.dataset.canticle;
+    render();
+    return;
+  }
+
+  if (btn.dataset.theme) {
+    state.theme = btn.dataset.theme;
+    localStorage.setItem('pray1662-theme', state.theme);
+    applyTheme();
+    appRoot.querySelectorAll('[data-theme]').forEach(themeBtn => {
+      themeBtn.classList.toggle('active', themeBtn.dataset.theme === state.theme);
+    });
+    return;
+  }
+
+  switch (btn.id) {
+    case 'menuButton':
+      state.menuOpen = !state.menuOpen;
+      render();
+      break;
+    case 'today':
+      state.date = new Date();
+      state.focusIndex = 0;
+      state.menuOpen = false;
+      render();
+      break;
+    case 'prevTop':
+      state.date = addDays(state.date, -1);
+      state.focusIndex = 0;
+      render();
+      break;
+    case 'nextTop':
+      state.date = addDays(state.date, 1);
+      state.focusIndex = 0;
+      render();
+      break;
+    case 'focusPrev':
+      if (state.focusIndex > 0) {
+        state.focusIndex--;
+        render();
+        goTop();
+      }
+      break;
+    case 'focusNext': {
+      const office = buildOffice(state.date, state.office);
+      if (state.focusIndex < office.items.length - 1) {
+        state.focusIndex++;
+        render();
+        goTop();
+      } else {
+        state.mode = 'overview';
+        state.focusIndex = 0;
+        render();
+        goTop();
+      }
+      break;
+    }
+  }
+});
+
+appRoot.addEventListener('change', event => {
+  if (event.target.id !== 'datepick') return;
+  const [y,m,d] = event.target.value.split('-').map(Number);
+  if (!y || !m || !d) return;
+  state.date = new Date(y, m - 1, d);
+  state.focusIndex = 0;
+  render();
+});
 
 window.addEventListener('keydown', e => {
   if (state.mode !== 'focus') return;

@@ -1,4 +1,4 @@
-const CACHE = 'pray1662-v0.4.0';
+const CACHE = 'pray1662-v0.4.1';
 const ASSETS = [
   './index.html','./manifest.webmanifest','./src/app.js','./src/styles.css','./src/calendar.js','./src/office.js',
   './data/psalter.js','./data/lectionary.js','./data/ordinary-lessons.js','./data/liturgy.js','./data/collects.js','./icons/icon.svg'
@@ -11,5 +11,5 @@ self.addEventListener('fetch', event => {
     event.respondWith(fetch(event.request).then(response => { const copy=response.clone(); caches.open(CACHE).then(cache=>cache.put('./index.html',copy)); return response; }).catch(()=>caches.match('./index.html')));
     return;
   }
-  event.respondWith(caches.match(event.request,{ignoreSearch:true}).then(cached=>cached||fetch(event.request)));
+  event.respondWith(caches.match(event.request,{ignoreSearch:true}).then(cached => { const network = fetch(event.request).then(response => { if (response && response.ok) { const copy = response.clone(); caches.open(CACHE).then(cache => cache.put(event.request, copy)); } return response; }).catch(() => null); return cached || network; }));
 });
