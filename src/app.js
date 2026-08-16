@@ -2,20 +2,30 @@ import { addDays, formatDate, liturgicalLabel } from './calendar.js';
 import { buildOffice } from './office.js';
 import { fixed } from '../data/liturgy.js';
 
+const savedTheme = localStorage.getItem('pray1662-theme');
 const state = {
   date: new Date(),
   office: new Date().getHours() < 12 ? 'morning' : 'evening',
   mode: 'overview',
   focusIndex: 0,
-  canticleChoice: 'teDeum'
+  canticleChoice: 'teDeum',
+  theme: savedTheme === 'dark' || savedTheme === 'light' ? savedTheme : 'dark',
+  menuOpen: false,
+  language: 'traditional'
 };
+
+function applyTheme() {
+  document.documentElement.dataset.theme = state.theme;
+  document.documentElement.dataset.language = state.language;
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', state.theme === 'dark' ? '#2F4654' : '#EFEAE2');
+}
 
 function isoLocal(date) {
   return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
 }
 
 function esc(value='') {
-  return String(value).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  return String(value).replace(/[&<>\"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]));
 }
 
 function renderContent(content=[]) {
@@ -49,10 +59,15 @@ function appointmentPanel(item, open=false) {
   </details>`;
 }
 
-function collectPanel(open=false) {
-  return `<details class="office-item muted-item" ${open ? 'open' : ''}>
-    <summary><span>The Collect of the Day</span><small>Calendar text coming next</small></summary>
-    <div class="office-text"><p class="rubric">The proper Collect is calendar-driven. V0.3 keeps this visible in the sequence while the full Collect dataset is prepared and verified.</p></div>
+function collectPanel(item, open=false) {
+  const list = item.collects || [];
+  const subtitle = list.length ? list.map(c => c.title).join(' · ') : 'No collect resolved';
+  const copy = list.length
+    ? list.map((c, i) => `<section class="collect-copy"><div class="collect-name">${esc(c.title)}</div><p>${esc(c.text)}</p>${i < list.length - 1 ? '<div class="collect-divider"></div>' : ''}</section>`).join('')
+    : '<p class="rubric">No collect has been resolved for this date.</p>';
+  return `<details class="office-item collect-item" ${open ? 'open' : ''}>
+    <summary><span>${esc(item.title)}</span><small>${esc(subtitle)}</small></summary>
+    <div class="office-text">${copy}</div>
   </details>`;
 }
 
@@ -76,7 +91,7 @@ function overviewItems(office) {
   return office.items.map(item => {
     if (item.kind === 'fixed') return fixedPanel(item.id, open);
     if (item.kind === 'lesson' || item.kind === 'psalms') return appointmentPanel(item, open);
-    if (item.kind === 'collect') return collectPanel(open);
+    if (item.kind === 'collect') return collectPanel(item, open);
     if (item.kind === 'choice') return choicePanel(item, open);
     return '';
   }).join('');
@@ -101,8 +116,9 @@ function focusCard(item, index, total) {
     title=item.title; subtitle=item.value;
     body=`<div class="focus-reference">${esc(item.value)}</div><p class="rubric">Read or sing the appointed Psalms from your Prayer Book or Psalter.</p>`;
   } else if (item.kind === 'collect') {
-    title=item.title; subtitle='Proper Collect';
-    body=`<p class="rubric">The full calendar-driven Collect text will be added in the next data pass.</p>`;
+    const list = item.collects || [];
+    title='The Collect of the Day'; subtitle=list.map(c=>c.title).join(' · ');
+    body=list.map(c=>`<div class="focus-collect"><div class="collect-name">${esc(c.title)}</div><p>${esc(c.text)}</p></div>`).join('');
   }
   return `<section class="focus-card" aria-live="polite">
     <div class="focus-count">${index+1} / ${total}</div>
@@ -112,7 +128,22 @@ function focusCard(item, index, total) {
   </section>`;
 }
 
+function settingsMenu() {
+  if (!state.menuOpen) return '';
+  return `<div class="menu-card" id="menuCard" role="dialog" aria-label="Settings">
+    <div class="menu-section"><div class="menu-label">Appearance</div>
+      <div class="segmented"><button data-theme="light" class="${state.theme==='light'?'active':''}">Day</button><button data-theme="dark" class="${state.theme==='dark'?'active':''}">Night</button></div>
+    </div>
+    <div class="menu-section"><div class="menu-label">Language</div>
+      <div class="segmented"><button class="active">1662</button><button disabled title="Contemporary language mode is planned for a later release">Contemporary</button></div>
+      <p class="menu-note">Contemporary language will use a cleaner modern typeface when the text layer is added.</p>
+    </div>
+    <button class="menu-today" id="today">Return to today</button>
+  </div>`;
+}
+
 function render() {
+  applyTheme();
   const app = document.querySelector('#app');
   const office = buildOffice(state.date, state.office);
   const title = state.office === 'morning' ? 'Morning Prayer' : 'Evening Prayer';
@@ -123,9 +154,14 @@ function render() {
     : `<section class="office-list">${overviewItems(office)}</section>`;
 
   app.innerHTML = `<div class="shell ${state.mode==='focus'?'focus-shell':''}">
-    <header class="topbar"><div class="brand">Pray 1662</div><button class="iconbtn" id="today">Today</button></header>
+    <header class="topbar"><div class="brand">Pray 1662</div><div class="top-actions"><button class="menu-button" id="menuButton" aria-label="Open settings" aria-expanded="${state.menuOpen}">•••</button>${settingsMenu()}</div></header>
     <section class="hero compact">
-      <div class="eyebrow">${formatDate(state.date)}</div><h1>${title}</h1><div class="sub">${liturgicalLabel(state.date)}</div>
+      <div class="date-row">
+        <button class="date-arrow" id="prevTop" aria-label="Previous day">←</button>
+        <label class="date-centre"><span class="eyebrow">${formatDate(state.date)}</span><input class="datepick-top" id="datepick" type="date" value="${isoLocal(state.date)}" aria-label="Choose date" /></label>
+        <button class="date-arrow" id="nextTop" aria-label="Next day">→</button>
+      </div>
+      <h1>${title}</h1><div class="sub">${liturgicalLabel(state.date)}</div>
       <div class="office-switch"><button data-office="morning" class="${state.office==='morning'?'active':''}">Morning</button><button data-office="evening" class="${state.office==='evening'?'active':''}">Evening</button></div>
       <div class="mode-switch" role="group" aria-label="Reading mode">
         <button data-mode="overview" class="${state.mode==='overview'?'active':''}">Overview</button>
@@ -134,16 +170,17 @@ function render() {
       </div>
     </section>
     ${main}
-    ${state.mode !== 'focus' ? `<nav class="nav" aria-label="Date navigation"><button class="iconbtn" id="prev">←</button><input class="datepick" id="datepick" type="date" value="${isoLocal(state.date)}" aria-label="Choose date" /><button class="iconbtn" id="next">→</button></nav>` : ''}
     <footer class="footer">1662 Daily Prayer · Scripture references only · Designed to be used with a physical Bible</footer>
   </div>`;
 
-  document.querySelectorAll('[data-office]').forEach(btn => btn.addEventListener('click', () => { state.office = btn.dataset.office; state.focusIndex=0; render(); }));
-  document.querySelectorAll('[data-mode]').forEach(btn => btn.addEventListener('click', () => { state.mode = btn.dataset.mode; state.focusIndex=0; render(); }));
+  document.querySelectorAll('[data-office]').forEach(btn => btn.addEventListener('click', () => { state.office = btn.dataset.office; state.focusIndex=0; state.menuOpen=false; render(); }));
+  document.querySelectorAll('[data-mode]').forEach(btn => btn.addEventListener('click', () => { state.mode = btn.dataset.mode; state.focusIndex=0; state.menuOpen=false; render(); }));
   document.querySelectorAll('[data-canticle]').forEach(btn => btn.addEventListener('click', e => { e.preventDefault(); state.canticleChoice = btn.dataset.canticle; render(); }));
-  document.querySelector('#today')?.addEventListener('click',()=>{ state.date=new Date(); state.focusIndex=0; render(); });
-  document.querySelector('#prev')?.addEventListener('click',()=>{ state.date=addDays(state.date,-1); render(); });
-  document.querySelector('#next')?.addEventListener('click',()=>{ state.date=addDays(state.date,1); render(); });
+  document.querySelectorAll('[data-theme]').forEach(btn => btn.addEventListener('click', () => { state.theme=btn.dataset.theme; localStorage.setItem('pray1662-theme',state.theme); render(); }));
+  document.querySelector('#menuButton')?.addEventListener('click',()=>{ state.menuOpen=!state.menuOpen; render(); });
+  document.querySelector('#today')?.addEventListener('click',()=>{ state.date=new Date(); state.focusIndex=0; state.menuOpen=false; render(); });
+  document.querySelector('#prevTop')?.addEventListener('click',()=>{ state.date=addDays(state.date,-1); state.focusIndex=0; render(); });
+  document.querySelector('#nextTop')?.addEventListener('click',()=>{ state.date=addDays(state.date,1); state.focusIndex=0; render(); });
   document.querySelector('#datepick')?.addEventListener('change',e=>{ const [y,m,d]=e.target.value.split('-').map(Number); state.date=new Date(y,m-1,d); state.focusIndex=0; render(); });
   document.querySelector('#focusPrev')?.addEventListener('click',()=>{ if(state.focusIndex>0){state.focusIndex--;render();window.scrollTo(0,0);} });
   document.querySelector('#focusNext')?.addEventListener('click',()=>{
