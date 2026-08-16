@@ -1,4 +1,3 @@
-import './styles.css';
 import { addDays, formatDate, liturgicalLabel } from './calendar.js';
 import { buildOffice } from './office.js';
 

@@ -78,5 +78,10 @@ The next useful build is the reader experience rather than more lectionary data:
 - Further historical verification of Sunday/Holy-Day collision precedence.
 
 
-## V0.2.1 GitHub Pages fix
+## V0.2.2 GitHub Pages fix
 Asset, manifest, service-worker and icon paths are now relative so the app works when hosted under a GitHub Pages project path such as `/Pray1662/`.
+
+
+## V0.2.2 browser compatibility fix
+
+GitHub Pages serves this project directly as static files. CSS is therefore linked from `index.html` rather than imported from JavaScript. Native browser ES modules do not support `import './styles.css'` without a bundler such as Vite. This release removes the unused Vite build dependency and has been tested both at the domain root and from a `/Pray1662/` subpath matching GitHub Pages project hosting.
