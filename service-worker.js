@@ -1,6 +1,6 @@
-const CACHE = 'pray1662-v0.5.0';
+const CACHE = 'pray1662-v0.6.0';
 const ASSETS = [
-  './index.html','./manifest.webmanifest','./src/app.js','./src/styles.css','./src/calendar.js','./src/office.js',
+  './index.html','./manifest.webmanifest','./src/app.js','./src/styles.css','./src/calendar.js','./src/office.js','./src/year-calendar.js',
   './data/psalter.js','./data/lectionary.js','./data/ordinary-lessons.js','./data/liturgy.js','./data/collects.js','./icons/icon.svg','./icons/icon-192.png','./icons/icon-512.png'
 ];
 self.addEventListener('install', event => { self.skipWaiting(); event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS))); });

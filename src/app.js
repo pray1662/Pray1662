@@ -1,6 +1,7 @@
 import { addDays, formatDate, liturgicalLabel } from './calendar.js';
 import { buildOffice } from './office.js';
 import { fixed } from '../data/liturgy.js';
+import { getYearLectionary, lessonSummary } from './year-calendar.js';
 
 const savedTheme = localStorage.getItem('pray1662-theme');
 const savedDyslexic = localStorage.getItem('pray1662-dyslexic') === 'true';
@@ -13,7 +14,9 @@ const state = {
   theme: savedTheme === 'dark' || savedTheme === 'light' ? savedTheme : 'dark',
   menuOpen: false,
   language: 'traditional',
-  dyslexic: savedDyslexic
+  dyslexic: savedDyslexic,
+  view: 'office',
+  calendarYear: new Date().getFullYear()
 };
 
 function applyTheme() {
@@ -139,10 +142,12 @@ function settingsMenu() {
     </div>
     <div class="menu-section"><div class="menu-label">Language</div>
       <div class="segmented"><button class="active">1662</button><button disabled title="Contemporary language mode is planned for the next release">Contemporary</button></div>
-<p class="menu-note">Contemporary language will be added.</p>    </div>
+      <p class="menu-note">Contemporary language will be added.</p>
+    </div>
     <div class="menu-section"><div class="menu-label">Accessibility</div>
       <label class="check-row"><input id="dyslexicToggle" type="checkbox" ${state.dyslexic?'checked':''}><span><strong>Dyslexia-friendly text</strong><small>OpenDyslexic, larger type and wider line spacing</small></span></label>
     </div>
+    <div class="menu-section"><button class="menu-today menu-link" id="openAbout">About Pray1662</button></div>
     <div class="menu-section install-menu-section" id="installMenuSection"><button class="menu-today" id="installApp">Add Pray1662 to Home Screen</button></div>
     <button class="menu-today" id="today">Return to today</button>
   </div>`;
@@ -177,6 +182,45 @@ function installNudge() {
   </aside>`;
 }
 
+
+function shortDate(date) {
+  return new Intl.DateTimeFormat('en-GB', { day:'numeric', month:'short' }).format(date);
+}
+
+function aboutView() {
+  return `<section class="info-page">
+    <button class="back-link" id="backToOffice">← Back to prayer</button>
+    <div class="info-hero"><div class="eyebrow">About</div><h1>About Pray1662</h1></div>
+    <div class="about-sections">
+      <section><h2>What is the Book of Common Prayer?</h2><p>The Book of Common Prayer is the historic prayer book of the Church of England. Pray1662 follows its pattern of Morning and Evening Prayer, first authorised in its 1662 form.</p></section>
+      <section><h2>What is the 30-day Psalter?</h2><p>The 1662 Prayer Book divides the Psalms between Morning and Evening Prayer so that the Psalter is prayed through each month.</p></section>
+      <section><h2>Why don’t you have the full Bible readings?</h2><p>There are lots of Bible apps out there that you are free to use, but a physical Bible is strongly recommended.</p></section>
+      <section class="calendar-callout"><h2>What will I read if I follow this for a year?</h2><p>See every appointed Morning and Evening Prayer reading for the year.</p><button class="primary-link" id="openCalendar">View the annual lectionary →</button></section>
+    </div>
+  </section>`;
+}
+
+function calendarView() {
+  const rows = getYearLectionary(state.calendarYear);
+  const body = rows.map(row => {
+    const iso = isoLocal(row.date);
+    return `<button class="calendar-row" data-calendar-date="${iso}" aria-label="Open ${esc(shortDate(row.date))}">
+      <span class="calendar-date"><strong>${esc(shortDate(row.date))}</strong><small>${esc(row.label)}</small></span>
+      <span class="calendar-reading"><em>Morning</em>${esc(lessonSummary(row.morning) || '—')}</span>
+      <span class="calendar-reading"><em>Evening</em>${esc(lessonSummary(row.evening) || '—')}</span>
+    </button>`;
+  }).join('');
+  return `<section class="calendar-page">
+    <button class="back-link" id="backToAbout">← About Pray1662</button>
+    <div class="calendar-heading"><div><div class="eyebrow">Annual lectionary</div><h1>What will I read?</h1></div>
+      <div class="year-nav"><button id="prevYear" aria-label="Previous year">←</button><strong>${state.calendarYear}</strong><button id="nextYear" aria-label="Next year">→</button></div>
+    </div>
+    <div class="calendar-table-head" aria-hidden="true"><span>Date</span><span>Morning</span><span>Evening</span></div>
+    <div class="calendar-list">${body}</div>
+    <p class="calendar-note">Tap any date to open that day in Pray1662. Readings are generated from the same lectionary data used by the daily Office.</p>
+  </section>`;
+}
+
 function render() {
   applyTheme();
   const app = document.querySelector('#app');
@@ -187,6 +231,15 @@ function render() {
   const main = state.mode === 'focus'
     ? focusCard(office.items[state.focusIndex], state.focusIndex, office.items.length)
     : `<section class="office-list">${overviewItems(office)}</section>`;
+
+  if (state.view === 'about' || state.view === 'calendar') {
+    app.innerHTML = `<div class="shell info-shell">
+      <header class="topbar"><div class="brand">Pray 1662</div><div class="top-actions"><button class="menu-button" id="menuButton" aria-label="Open settings" aria-expanded="${state.menuOpen}">•••</button>${settingsMenu()}</div></header>
+      ${state.view === 'about' ? aboutView() : calendarView()}
+      <footer class="footer">1662 Daily Prayer · Scripture references only · Designed to be used with a physical Bible</footer>
+    </div>`;
+    return;
+  }
 
   app.innerHTML = `<div class="shell ${state.mode==='focus'?'focus-shell':''}">
     <header class="topbar"><div class="brand">Pray 1662</div><div class="top-actions"><button class="menu-button" id="menuButton" aria-label="Open settings" aria-expanded="${state.menuOpen}">•••</button>${settingsMenu()}</div></header>
@@ -220,6 +273,19 @@ function goTop() {
 appRoot.addEventListener('click', event => {
   const btn = event.target.closest('button');
   if (!btn || !appRoot.contains(btn)) return;
+
+  if (btn.dataset.calendarDate) {
+    const [y,m,d] = btn.dataset.calendarDate.split('-').map(Number);
+    state.date = new Date(y, m - 1, d);
+    state.calendarYear = y;
+    state.view = 'office';
+    state.mode = 'overview';
+    state.focusIndex = 0;
+    state.menuOpen = false;
+    render();
+    goTop();
+    return;
+  }
 
   if (btn.dataset.office) {
     state.office = btn.dataset.office;
@@ -259,6 +325,39 @@ appRoot.addEventListener('click', event => {
       state.menuOpen = !state.menuOpen;
       render();
       break;
+    case 'openAbout':
+      state.view = 'about';
+      state.menuOpen = false;
+      render();
+      goTop();
+      break;
+    case 'openCalendar':
+      state.calendarYear = state.date.getFullYear();
+      state.view = 'calendar';
+      state.menuOpen = false;
+      render();
+      goTop();
+      break;
+    case 'backToAbout':
+      state.view = 'about';
+      render();
+      goTop();
+      break;
+    case 'backToOffice':
+      state.view = 'office';
+      render();
+      goTop();
+      break;
+    case 'prevYear':
+      state.calendarYear--;
+      render();
+      goTop();
+      break;
+    case 'nextYear':
+      state.calendarYear++;
+      render();
+      goTop();
+      break;
     case 'dismissInstall':
       localStorage.setItem('pray1662-install-dismissed','true');
       render();
@@ -276,6 +375,8 @@ appRoot.addEventListener('click', event => {
       break;
     case 'today':
       state.date = new Date();
+      state.calendarYear = state.date.getFullYear();
+      state.view = 'office';
       state.focusIndex = 0;
       state.menuOpen = false;
       render();

@@ -98,7 +98,7 @@ GitHub Pages serves this project directly as static files. CSS is therefore link
 - Static assets now refresh in the background when online.
 
 
-## v0.5 changes
+## v0.6 changes
 
 - Complete fixed red-letter Holy Day collect layer for the calendar keys used by the app.
 - Good Friday, Easter Monday/Tuesday, and Whitsun Monday/Tuesday collect handling.
@@ -107,3 +107,14 @@ GitHub Pages serves this project directly as static files. CSS is therefore link
 - Dyslexia-friendly text option: OpenDyslexic (loaded from the jsDelivr CDN), approximately +3pt base size, and increased line spacing. The preference is remembered locally.
 - Mobile Add-to-Home-Screen prompt. iOS explains Safari Share → Add to Home Screen; supported Android browsers use the native install prompt.
 - Updated cache version for deployment.
+
+
+## V0.6 — Annual lectionary calendar
+
+- Adds **About Pray1662** to the three-dot menu.
+- Adds short explanations of the BCP, the 30-day Psalter, and why Bible text is not embedded.
+- Adds **What will I read if I follow this for a year?**, generated from the same lectionary engine as the daily Office.
+- Previous/next-year navigation.
+- Desktop Date / Morning / Evening table and a stacked mobile layout.
+- Tap any calendar date to open that day's Office.
+- Preserves the V0.5 stability, accessibility, install and Holy-Day collect work.
