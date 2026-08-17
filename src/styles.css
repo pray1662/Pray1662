@@ -158,3 +158,39 @@ button { -webkit-tap-highlight-color:transparent; }
   .calendar-reading { display:grid; grid-template-columns:4.5rem 1fr; gap:8px; }
   .calendar-reading em { display:block; font:normal .68rem/1.45 system-ui,sans-serif; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); padding-top:.15rem; }
 }
+
+/* V0.7 — Scriptural marginalia and lectionary coverage */
+.marginalia { float:right; width:185px; margin:0 0 18px 28px; padding:12px 0 12px 14px; border-left:1px solid var(--line); font-family:system-ui,sans-serif; color:var(--muted); }
+.marginalia > span { display:block; margin-bottom:8px; font-size:.62rem; letter-spacing:.11em; text-transform:uppercase; opacity:.75; }
+.marginalia div { display:flex; flex-direction:column; gap:4px; }
+.marginalia em { font-style:normal; font-size:.7rem; line-height:1.35; }
+.focus-copy .marginalia { margin-top:2px; }
+.coverage-summary { max-width:760px; margin:-10px 0 30px; padding:18px 20px; border:1px solid var(--line-soft); border-radius:16px; font: .86rem/1.55 system-ui,sans-serif; color:var(--muted); }
+.coverage-summary strong { color:var(--text); font-weight:600; }
+@media (max-width:680px) {
+  .marginalia { float:none; width:auto; margin:0 0 20px; padding:11px 0 0; border-left:0; border-top:1px solid var(--line-soft); }
+  .marginalia div { flex-direction:row; flex-wrap:wrap; gap:6px 12px; }
+}
+
+/* V0.8 — interchangeable lectionary / reading-plan layer */
+.reading-source { margin-top:9px; font: .68rem/1.4 system-ui,sans-serif; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
+.plan-options { display:grid; gap:7px; }
+.plan-option { width:100%; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:11px 13px; border:1px solid var(--line); border-radius:14px; background:transparent; text-align:left; cursor:pointer; }
+.plan-option > span { min-width:0; }
+.plan-option strong { display:block; font:600 .82rem/1.3 system-ui,sans-serif; }
+.plan-option small { display:block; margin-top:2px; font: .68rem/1.3 system-ui,sans-serif; color:var(--muted); }
+.plan-option em { flex:0 0 auto; font:normal .82rem/1 system-ui,sans-serif; }
+.plan-option.active { background:rgba(127,127,127,.08); border-color:var(--text); }
+.plan-option:disabled { opacity:.42; cursor:not-allowed; }
+.plan-coming { font-style:italic; }
+.calendar-plan-picker { display:flex; flex-wrap:wrap; gap:7px; margin:-8px 0 14px; }
+.calendar-plan-picker button { border:1px solid var(--line); background:transparent; border-radius:999px; padding:8px 12px; cursor:pointer; font: .74rem/1.2 system-ui,sans-serif; }
+.calendar-plan-picker button.active { background:var(--text); color:var(--bg); }
+.calendar-plan-picker button:disabled { opacity:.38; cursor:not-allowed; }
+.calendar-plan-description { max-width:760px; margin:0 0 26px; font:.78rem/1.55 system-ui,sans-serif; color:var(--muted); }
+.calendar-plan-description strong { color:var(--text); font-weight:600; }
+@media (max-width:520px) {
+  .calendar-plan-picker { display:grid; grid-template-columns:1fr 1fr; }
+  .calendar-plan-picker button { width:100%; }
+}
+.menu-card { max-height:min(78vh,700px); overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch; }

@@ -1,10 +1,15 @@
 import { addDays, formatDate, liturgicalLabel } from './calendar.js';
 import { buildOffice } from './office.js';
 import { fixed } from '../data/liturgy.js';
+import { getMarginalia } from '../data/marginalia.js';
 import { getYearLectionary, lessonSummary } from './year-calendar.js';
+import { getYearCoverage } from './year-coverage.js';
+import { readingPlans, getReadingPlan, normaliseReadingPlan } from '../data/reading-plans.js';
 
 const savedTheme = localStorage.getItem('pray1662-theme');
 const savedDyslexic = localStorage.getItem('pray1662-dyslexic') === 'true';
+const savedMarginalia = localStorage.getItem('pray1662-marginalia') === 'true';
+const savedReadingPlan = normaliseReadingPlan(localStorage.getItem('pray1662-reading-plan') || '1662');
 const state = {
   date: new Date(),
   office: new Date().getHours() < 12 ? 'morning' : 'evening',
@@ -15,8 +20,11 @@ const state = {
   menuOpen: false,
   language: 'traditional',
   dyslexic: savedDyslexic,
+  marginalia: savedMarginalia,
+  readingPlan: savedReadingPlan,
   view: 'office',
-  calendarYear: new Date().getFullYear()
+  calendarYear: new Date().getFullYear(),
+  calendarReturn: 'office'
 };
 
 function applyTheme() {
@@ -43,11 +51,19 @@ function renderContent(content=[]) {
   }).join('');
 }
 
+function marginaliaBlock(id) {
+  if (!state.marginalia) return '';
+  const refs = getMarginalia(id);
+  if (!refs.length) return '';
+  return `<aside class="marginalia" aria-label="Scriptural marginalia"><span>Scripture</span><div>${refs.map(ref => `<em>${esc(ref)}</em>`).join('')}</div></aside>`;
+}
+
 function fixedPanel(id, open=false) {
   const item = fixed[id];
   return `<details class="office-item" ${open ? 'open' : ''}>
     <summary><span>${esc(item.title)}</span>${item.subtitle ? `<small>${esc(item.subtitle)}</small>` : ''}</summary>
     <div class="office-text">
+      ${marginaliaBlock(id)}
       ${item.rubric ? `<p class="rubric">${esc(item.rubric)}</p>` : ''}
       ${renderContent(item.content)}
     </div>
@@ -55,12 +71,13 @@ function fixedPanel(id, open=false) {
 }
 
 function appointmentPanel(item, open=false) {
-  const label = 'Read from your Bible';
+  const hasReading = Boolean(item.value);
+  const help = hasReading ? 'Read from your Bible.' : (item.note || 'No reading is appointed.');
   return `<details class="office-item appointment" ${open ? 'open' : ''}>
-    <summary><span>${esc(item.title)}</span><small>${esc(item.value || '')}</small></summary>
+    <summary><span>${esc(item.title)}</span><small>${esc(item.value || 'Not appointed')}</small></summary>
     <div class="office-text appointment-body">
       <div class="appointment-ref">${esc(item.value || 'Not appointed')}</div>
-      <p class="rubric">${label}.</p>
+      <p class="rubric">${esc(help)}</p>
     </div>
   </details>`;
 }
@@ -114,10 +131,10 @@ function focusCard(item, index, total) {
   if (item.kind === 'fixed') {
     const f = fixed[item.id];
     title=f.title; subtitle=f.subtitle || '';
-    body = `${f.rubric ? `<p class="rubric">${esc(f.rubric)}</p>` : ''}${renderContent(f.content)}`;
+    body = `${marginaliaBlock(item.id)}${f.rubric ? `<p class="rubric">${esc(f.rubric)}</p>` : ''}${renderContent(f.content)}`;
   } else if (item.kind === 'lesson') {
     title=item.title; subtitle=item.value || 'Not appointed';
-    body=`<div class="focus-reference">${esc(item.value || 'Not appointed')}</div><p class="rubric">Read this lesson from your Bible, then continue.</p>`;
+    body=`<div class="focus-reference">${esc(item.value || 'Not appointed')}</div><p class="rubric">${esc(item.value ? 'Read this lesson from your Bible, then continue.' : (item.note || 'No reading is appointed.'))}</p>`;
   } else if (item.kind === 'psalms') {
     title=item.title; subtitle=item.value;
     body=`<div class="focus-reference">${esc(item.value)}</div><p class="rubric">Read from your Bible.</p>`;
@@ -141,15 +158,26 @@ function settingsMenu() {
       <div class="segmented"><button data-theme="light" class="${state.theme==='light'?'active':''}">Day</button><button data-theme="dark" class="${state.theme==='dark'?'active':''}">Night</button></div>
     </div>
     <div class="menu-section"><div class="menu-label">Language</div>
-      <div class="segmented"><button class="active">1662</button><button disabled title="Contemporary language mode is planned for the next release">Contemporary</button></div>
+      <div class="segmented"><button class="active">1662</button><button disabled title="Contemporary language mode is planned">Contemporary</button></div>
       <p class="menu-note">Contemporary language will be added.</p>
+    </div>
+    <div class="menu-section"><div class="menu-label">Lectionary / reading plan</div>
+      <div class="plan-options" role="radiogroup" aria-label="Lectionary or reading plan">
+        ${Object.values(readingPlans).map(plan => `<button class="plan-option ${state.readingPlan===plan.id?'active':''}" data-reading-plan="${plan.id}" role="radio" aria-checked="${state.readingPlan===plan.id}" ${plan.available?'':'disabled'}><span><strong>${esc(plan.shortName)}</strong><small>${esc(plan.type === 'reading-plan' ? 'Bible reading plan' : 'Lectionary')}</small></span>${state.readingPlan===plan.id?'<em>✓</em>':''}</button>`).join('')}
+      </div>
+      <p class="menu-note">${esc(getReadingPlan(state.readingPlan).description)}</p>
+      ${!readingPlans['common-worship'].available ? '<p class="menu-note plan-coming">Common Worship: awaiting complete authorised data import.</p>' : ''}
+    </div>
+    <div class="menu-section"><div class="menu-label">Reading</div>
+      <label class="check-row"><input id="marginaliaToggle" type="checkbox" ${state.marginalia?'checked':''}><span><strong>Scriptural marginalia</strong><small>Show biblical references alongside the Prayer Book text</small></span></label>
     </div>
     <div class="menu-section"><div class="menu-label">Accessibility</div>
       <label class="check-row"><input id="dyslexicToggle" type="checkbox" ${state.dyslexic?'checked':''}><span><strong>Dyslexia-friendly text</strong><small>OpenDyslexic, larger type and wider line spacing</small></span></label>
     </div>
-    <div class="menu-section"><button class="menu-today menu-link" id="openAbout">About Pray1662</button></div>
+    <div class="menu-section"><button class="menu-today menu-link" id="openCalendarDirect">View full lectionary</button></div>
     <div class="menu-section install-menu-section" id="installMenuSection"><button class="menu-today" id="installApp">Add Pray1662 to Home Screen</button></div>
     <button class="menu-today" id="today">Return to today</button>
+    <div class="menu-section"><button class="menu-today menu-link" id="openAbout">About Pray1662</button></div>
   </div>`;
 }
 
@@ -192,16 +220,20 @@ function aboutView() {
     <button class="back-link" id="backToOffice">← Back to prayer</button>
     <div class="info-hero"><div class="eyebrow">About</div><h1>About Pray1662</h1></div>
     <div class="about-sections">
-      <section><h2>What is the Book of Common Prayer?</h2><p>The Book of Common Prayer is the historic prayer book of the Church of England. Pray1662 follows its pattern of Morning and Evening Prayer, first authorised in its 1662 form.</p></section>
+      <section><h2>What is the Book of Common Prayer?</h2><p>The Book of Common Prayer is the prayer book of the Church of England. Pray1662 follows its pattern of Morning and Evening Prayer, first authorised in its 1662 form.</p></section>
       <section><h2>What is the 30-day Psalter?</h2><p>The 1662 Prayer Book divides the Psalms between Morning and Evening Prayer so that the Psalter is prayed through each month.</p></section>
       <section><h2>Why don’t you have the full Bible readings?</h2><p>There are lots of Bible apps out there that you are free to use, but a physical Bible is strongly recommended.</p></section>
+      <section><h2>Which Bible readings does Pray1662 use?</h2><p>You can choose the original 1662 Lectionary or the M’Cheyne Bible Reading Plan. Common Worship Daily Prayer is also built into the reading-plan architecture and will be enabled once its complete authorised dataset is imported. Changing this setting changes the Bible references only: the 1662 Office, 30-day Psalter and collects stay the same.</p></section>
+      <section><h2>Scriptural marginalia</h2><p>Optional biblical references are drawn from the 1839 SPCK edition of <em>The Book of Common Prayer: with marginal references to texts in the Holy Scriptures</em>. Pray1662 shows a restrained selection so the prayer text remains uncluttered.</p></section>
       <section class="calendar-callout"><h2>What will I read if I follow this for a year?</h2><p>See every appointed Morning and Evening Prayer reading for the year.</p><button class="primary-link" id="openCalendar">View the annual lectionary →</button></section>
     </div>
   </section>`;
 }
 
 function calendarView() {
-  const rows = getYearLectionary(state.calendarYear);
+  const plan = getReadingPlan(state.readingPlan);
+  const rows = getYearLectionary(state.calendarYear, state.readingPlan);
+  const coverage = getYearCoverage(state.calendarYear, state.readingPlan);
   const body = rows.map(row => {
     const iso = isoLocal(row.date);
     return `<button class="calendar-row" data-calendar-date="${iso}" aria-label="Open ${esc(shortDate(row.date))}">
@@ -211,20 +243,25 @@ function calendarView() {
     </button>`;
   }).join('');
   return `<section class="calendar-page">
-    <button class="back-link" id="backToAbout">← About Pray1662</button>
-    <div class="calendar-heading"><div><div class="eyebrow">Annual lectionary</div><h1>What will I read?</h1></div>
+    <button class="back-link" id="calendarBack">← ${state.calendarReturn === 'about' ? 'About Pray1662' : 'Back to prayer'}</button>
+    <div class="calendar-heading"><div><div class="eyebrow">Annual readings</div><h1>What will I read?</h1></div>
       <div class="year-nav"><button id="prevYear" aria-label="Previous year">←</button><strong>${state.calendarYear}</strong><button id="nextYear" aria-label="Next year">→</button></div>
     </div>
+    <div class="calendar-plan-picker" role="radiogroup" aria-label="Lectionary or reading plan">${Object.values(readingPlans).map(p => `<button data-reading-plan="${p.id}" class="${state.readingPlan===p.id?'active':''}" ${p.available?'':'disabled'}>${esc(p.shortName)}</button>`).join('')}</div>
+    <p class="calendar-plan-description"><strong>${esc(plan.name)}</strong> · ${esc(plan.description)}</p>
+    <p class="coverage-summary">${state.readingPlan === 'mcheyne'
+      ? `Following the M’Cheyne plan through ${state.calendarYear} covers <strong>${coverage.percent}% of the 66-book Bible’s chapters</strong>. The classic plan reads the Old Testament once and the New Testament and Psalms twice over the year.`
+      : `Following Morning and Evening Prayer through ${state.calendarYear} will touch at least part of about <strong>${coverage.percent}% of the 66-book Bible’s chapters</strong> (${coverage.otPercent}% of Old Testament chapters and ${coverage.ntPercent}% of New Testament chapters)${coverage.includesApocrypha ? ', with additional readings from the Apocrypha where the 1662 lectionary appoints them' : ''}.`}</p>
     <div class="calendar-table-head" aria-hidden="true"><span>Date</span><span>Morning</span><span>Evening</span></div>
     <div class="calendar-list">${body}</div>
-    <p class="calendar-note">Tap any date to open that day in Pray1662. Readings are generated from the same lectionary data used by the daily Office.</p>
+    <p class="calendar-note">Tap any date to open that day in Pray1662. Readings are generated from the same reading-plan data used by the daily Office.</p>
   </section>`;
 }
 
 function render() {
   applyTheme();
   const app = document.querySelector('#app');
-  const office = buildOffice(state.date, state.office);
+  const office = buildOffice(state.date, state.office, state.readingPlan);
   const title = state.office === 'morning' ? 'Morning Prayer' : 'Evening Prayer';
   if (state.focusIndex >= office.items.length) state.focusIndex = 0;
 
@@ -249,7 +286,7 @@ function render() {
         <label class="date-centre"><span class="eyebrow">${formatDate(state.date)}</span><input class="datepick-top" id="datepick" type="date" value="${isoLocal(state.date)}" aria-label="Choose date" /></label>
         <button class="date-arrow" id="nextTop" aria-label="Next day">→</button>
       </div>
-      <h1>${title}</h1><div class="sub">${liturgicalLabel(state.date)}</div>
+      <h1>${title}</h1><div class="sub">${liturgicalLabel(state.date)}</div><div class="reading-source">Readings · ${esc(getReadingPlan(state.readingPlan).shortName)}</div>
       <div class="office-switch"><button data-office="morning" class="${state.office==='morning'?'active':''}">Morning</button><button data-office="evening" class="${state.office==='evening'?'active':''}">Evening</button></div>
       <div class="mode-switch" role="group" aria-label="Reading mode">
         <button data-mode="overview" class="${state.mode==='overview'?'active':''}">Overview</button>
@@ -284,6 +321,16 @@ appRoot.addEventListener('click', event => {
     state.menuOpen = false;
     render();
     goTop();
+    return;
+  }
+
+  if (btn.dataset.readingPlan) {
+    const plan = getReadingPlan(btn.dataset.readingPlan);
+    if (!plan.available) return;
+    state.readingPlan = plan.id;
+    state.focusIndex = 0;
+    localStorage.setItem('pray1662-reading-plan', state.readingPlan);
+    render();
     return;
   }
 
@@ -331,15 +378,17 @@ appRoot.addEventListener('click', event => {
       render();
       goTop();
       break;
+    case 'openCalendarDirect':
     case 'openCalendar':
+      state.calendarReturn = btn.id === 'openCalendar' ? 'about' : state.view;
       state.calendarYear = state.date.getFullYear();
       state.view = 'calendar';
       state.menuOpen = false;
       render();
       goTop();
       break;
-    case 'backToAbout':
-      state.view = 'about';
+    case 'calendarBack':
+      state.view = state.calendarReturn === 'about' ? 'about' : 'office';
       render();
       goTop();
       break;
@@ -399,7 +448,7 @@ appRoot.addEventListener('click', event => {
       }
       break;
     case 'focusNext': {
-      const office = buildOffice(state.date, state.office);
+      const office = buildOffice(state.date, state.office, state.readingPlan);
       if (state.focusIndex < office.items.length - 1) {
         state.focusIndex++;
         render();
@@ -420,6 +469,12 @@ appRoot.addEventListener('change', event => {
     state.dyslexic = event.target.checked;
     localStorage.setItem('pray1662-dyslexic', String(state.dyslexic));
     applyTheme();
+    return;
+  }
+  if (event.target.id === 'marginaliaToggle') {
+    state.marginalia = event.target.checked;
+    localStorage.setItem('pray1662-marginalia', String(state.marginalia));
+    render();
     return;
   }
   if (event.target.id !== 'datepick') return;
