@@ -4,18 +4,31 @@ function liteEnabled() {
   return localStorage.getItem(STORAGE_KEY) === 'true';
 }
 
-function installLiteToggle() {
+function installLiteControls() {
   const modeSwitch = document.querySelector('.mode-switch');
-  if (!modeSwitch || modeSwitch.querySelector('[data-lite-toggle]')) return;
+  if (!modeSwitch) return;
 
-  const button = document.createElement('button');
-  button.type = 'button';
-  button.dataset.liteToggle = 'true';
-  button.textContent = 'Lite';
-  button.classList.toggle('active', liteEnabled());
-  button.setAttribute('aria-pressed', String(liteEnabled()));
-  button.setAttribute('aria-label', 'Toggle Lite Office');
-  modeSwitch.append(button);
+  if (!modeSwitch.querySelector('[data-lite-toggle]')) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.dataset.liteToggle = 'true';
+    button.textContent = 'Lite';
+    button.classList.toggle('active', liteEnabled());
+    button.setAttribute('aria-pressed', String(liteEnabled()));
+    button.setAttribute('aria-label', 'Toggle Lite Office');
+    modeSwitch.append(button);
+  }
+
+  const readingSource = document.querySelector('.reading-source');
+  if (!readingSource) return;
+
+  document.querySelector('.lite-description')?.remove();
+  if (liteEnabled()) {
+    const note = document.createElement('div');
+    note.className = 'reading-source lite-description';
+    note.textContent = 'Lite · shortened devotional form';
+    readingSource.insertAdjacentElement('afterend', note);
+  }
 }
 
 function rerenderCurrentMode() {
@@ -34,6 +47,6 @@ document.addEventListener('click', event => {
   rerenderCurrentMode();
 });
 
-const observer = new MutationObserver(installLiteToggle);
+const observer = new MutationObserver(installLiteControls);
 observer.observe(document.querySelector('#app'), { childList:true, subtree:true });
-installLiteToggle();
+installLiteControls();
