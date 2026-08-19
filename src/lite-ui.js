@@ -8,26 +8,30 @@ function installLiteControls() {
   const modeSwitch = document.querySelector('.mode-switch');
   if (!modeSwitch) return;
 
-  if (!modeSwitch.querySelector('[data-lite-toggle]')) {
-    const button = document.createElement('button');
+  const enabled = liteEnabled();
+  let button = modeSwitch.querySelector('[data-lite-toggle]');
+  if (!button) {
+    button = document.createElement('button');
     button.type = 'button';
     button.dataset.liteToggle = 'true';
     button.textContent = 'Lite';
-    button.classList.toggle('active', liteEnabled());
-    button.setAttribute('aria-pressed', String(liteEnabled()));
     button.setAttribute('aria-label', 'Toggle Lite Office');
     modeSwitch.append(button);
   }
+  button.classList.toggle('active', enabled);
+  button.setAttribute('aria-pressed', String(enabled));
 
   const readingSource = document.querySelector('.reading-source');
   if (!readingSource) return;
 
-  document.querySelector('.lite-description')?.remove();
-  if (liteEnabled()) {
-    const note = document.createElement('div');
-    note.className = 'reading-source lite-description';
-    note.textContent = 'Lite · shortened devotional form';
-    readingSource.insertAdjacentElement('afterend', note);
+  const note = document.querySelector('.lite-description');
+  if (enabled && !note) {
+    const newNote = document.createElement('div');
+    newNote.className = 'reading-source lite-description';
+    newNote.textContent = 'Lite · shortened devotional form';
+    readingSource.insertAdjacentElement('afterend', newNote);
+  } else if (!enabled && note) {
+    note.remove();
   }
 }
 
@@ -42,8 +46,6 @@ document.addEventListener('click', event => {
 
   const next = !liteEnabled();
   localStorage.setItem(STORAGE_KEY, String(next));
-  button.classList.toggle('active', next);
-  button.setAttribute('aria-pressed', String(next));
   rerenderCurrentMode();
 });
 
