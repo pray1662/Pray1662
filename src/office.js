@@ -34,6 +34,10 @@ function rotateForDate(items, date) {
   return items[index];
 }
 
+function savedLitePreference() {
+  return typeof localStorage !== 'undefined' && localStorage.getItem('pray1662-lite') === 'true';
+}
+
 export function getLiteVerses(date) {
   return {
     opening: rotateForDate(LITE_OPENING_SENTENCES, date),
@@ -56,11 +60,12 @@ function liteItems(date, psalms, lessons) {
   ];
 }
 
-export function buildOffice(date, office, readingPlanId = '1662', lite = false) {
+export function buildOffice(date, office, readingPlanId = '1662', lite = null) {
   const psalms = getProperPsalms(date, office) ?? getPsalms(date, office);
   const lessons = getReadings(date, office, readingPlanId);
   const collects = getCollectsForDate(date, office);
-  const base = lite
+  const useLite = lite === null ? savedLitePreference() : lite;
+  const base = useLite
     ? liteItems(date, psalms, lessons)
     : (office === 'morning' ? morningItems(psalms, lessons) : eveningItems(psalms, lessons));
   const items = base.map(item => {
@@ -68,5 +73,5 @@ export function buildOffice(date, office, readingPlanId = '1662', lite = false) 
     if (item.kind === 'lesson' && lessons.note) return { ...item, note: lessons.note };
     return item;
   });
-  return { office, psalms, lessons, collects, readingPlanId, lite, items };
+  return { office, psalms, lessons, collects, readingPlanId, lite:useLite, items };
 }
