@@ -37,7 +37,8 @@ function installLiteControls() {
 
 function rerenderCurrentMode() {
   const activeMode = document.querySelector('.mode-switch [data-mode].active');
-  activeMode?.click();
+  if (activeMode) activeMode.click();
+  else window.location.reload();
 }
 
 document.addEventListener('click', event => {
@@ -49,6 +50,11 @@ document.addEventListener('click', event => {
   rerenderCurrentMode();
 });
 
-const observer = new MutationObserver(installLiteControls);
-observer.observe(document.querySelector('#app'), { childList:true, subtree:true });
+const app = document.querySelector('#app');
+if (app) {
+  // The main app replaces #app's direct child when it renders. Watching only
+  // that level avoids the Lite controls triggering their own observer loop.
+  const observer = new MutationObserver(installLiteControls);
+  observer.observe(app, { childList:true });
+}
 installLiteControls();
