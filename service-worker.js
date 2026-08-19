@@ -1,6 +1,6 @@
-const CACHE = 'pray1662-v0.8.0';
+const CACHE = 'pray1662-v0.8.1';
 const ASSETS = [
-  './index.html','./manifest.webmanifest','./src/app.js','./src/styles.css','./src/calendar.js','./src/office.js','./src/year-calendar.js',
+  './index.html','./manifest.webmanifest','./src/app.js','./src/lite-ui.js','./src/styles.css','./src/calendar.js','./src/office.js','./src/year-calendar.js',
   './src/year-coverage.js','./data/reading-plans.js','./data/mcheyne.js','./data/common-worship.js',
   './data/psalter.js','./data/lectionary.js','./data/ordinary-lessons.js','./data/liturgy.js',
   './data/marginalia.js','./data/collects.js','./icons/icon.svg','./icons/icon-192.png','./icons/icon-512.png'
@@ -13,5 +13,5 @@ self.addEventListener('fetch', event => {
     event.respondWith(fetch(event.request).then(response => { const copy=response.clone(); caches.open(CACHE).then(cache=>cache.put('./index.html',copy)); return response; }).catch(()=>caches.match('./index.html')));
     return;
   }
-  event.respondWith(caches.match(event.request,{ignoreSearch:true}).then(cached => { const network = fetch(event.request).then(response => { if (response && response.ok) { const copy = response.clone(); caches.open(CACHE).then(cache => cache.put(event.request, copy)); } return response; }).catch(() => null); return cached || network; }));
+  event.respondWith(caches.match(event.request,{ignoreSearch:true}).then(cached => { const network = fetch(event.request).then(response => { if (response && response.ok) { const copy = response.clone(); caches.open(CACHE).then(cache=>cache.put(event.request, copy)); } return response; }).catch(() => null); return cached || network; }));
 });
