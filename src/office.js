@@ -1,7 +1,7 @@
 import { getPsalms } from '../data/psalter.js';
 import { getProperPsalms } from '../data/lectionary.js';
 import { getReadings } from '../data/reading-plans.js';
-import { morningItems, eveningItems } from '../data/liturgy.js';
+import { fixed, morningItems, eveningItems } from '../data/liturgy.js';
 import { getCollectsForDate } from '../data/collects.js';
 
 const LITE_OPENING_SENTENCES = [
@@ -45,12 +45,26 @@ export function getLiteVerses(date) {
   };
 }
 
-function liteItems(date, psalms, lessons) {
+function setLiteVerseBlocks(date) {
   const verses = getLiteVerses(date);
+  fixed.liteOpeningSentence = {
+    title:'Sentence of Scripture',
+    subtitle:verses.opening.reference,
+    content:[{ type:'p', text:verses.opening.text }]
+  };
+  fixed.liteComfortableWord = {
+    title:'Comfortable Word',
+    subtitle:verses.comfortable.reference,
+    content:[{ type:'p', text:verses.comfortable.text }]
+  };
+}
+
+function liteItems(date, psalms, lessons) {
+  setLiteVerseBlocks(date);
   return [
-    { kind:'scripture', title:'Sentence of Scripture', text:verses.opening.text, reference:verses.opening.reference },
+    { kind:'fixed', id:'liteOpeningSentence' },
     { kind:'fixed', id:'confession' },
-    { kind:'scripture', title:'Comfortable Word', text:verses.comfortable.text, reference:verses.comfortable.reference },
+    { kind:'fixed', id:'liteComfortableWord' },
     { kind:'psalms', title:'The Psalms', value:psalms.join(', ') },
     { kind:'lesson', title:'The First Lesson', value:lessons.first },
     { kind:'lesson', title:'The Second Lesson', value:lessons.second },
