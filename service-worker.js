@@ -1,4 +1,4 @@
-const CACHE = 'pray1662-v0.8.1';
+const CACHE = 'pray1662-v0.8.2';
 const ASSETS = [
   './index.html','./manifest.webmanifest','./src/app.js','./src/lite-ui.js','./src/styles.css','./src/calendar.js','./src/office.js','./src/year-calendar.js',
   './src/year-coverage.js','./data/reading-plans.js','./data/mcheyne.js','./data/common-worship.js',
