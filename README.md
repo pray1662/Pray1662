@@ -67,4 +67,4 @@ For the first visit after deployment, use a cache-busting query such as:
 
 ## Rights / beta status
 
-Pray1662 remains a development beta. See `SOURCES.md` for source and rights notes. Substantial BCP text, Common Worship data and the proposed contemporary-language text each have separate permissions considerations that should be resolved before a formal V1.0 public release.
+Pray1662 remains a development beta. See `SOURCES.md` for source and rights notes. Substantial BCP text and Common Worship data retain separate permissions considerations. Church Society has granted permission for Pray1662 to use contemporary-language material from *An English Prayer Book* (1994), with appropriate acknowledgement and a link to Church Society.
