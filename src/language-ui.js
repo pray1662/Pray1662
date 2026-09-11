@@ -1,13 +1,9 @@
 import { fixed } from '../data/liturgy.js';
-import { collects } from '../data/collects.js';
-import { contemporaryFixed, moderniseCollectText } from '../data/contemporary-liturgy.js';
+import { contemporaryFixed } from '../data/contemporary-liturgy.js';
 
 const STORAGE_KEY = 'pray1662-language';
 const traditionalFixed = Object.fromEntries(
   Object.keys(contemporaryFixed).map(id => [id, JSON.parse(JSON.stringify(fixed[id]))])
-);
-const traditionalCollectTexts = Object.fromEntries(
-  Object.entries(collects).map(([key, collect]) => [key, collect.text])
 );
 
 function selectedLanguage() {
@@ -22,10 +18,6 @@ function applyLanguage(language) {
   const contemporary = language === 'contemporary';
   for (const id of Object.keys(contemporaryFixed)) {
     fixed[id] = clone(contemporary ? contemporaryFixed[id] : traditionalFixed[id]);
-  }
-  for (const [key, collect] of Object.entries(collects)) {
-    const original = traditionalCollectTexts[key] || collect.text;
-    collect.text = contemporary ? moderniseCollectText(original) : original;
   }
   document.documentElement.dataset.language = language;
 }
@@ -49,7 +41,7 @@ function installLanguageControls() {
   const note = section.querySelector('.menu-note');
   if (note) {
     note.textContent = language === 'contemporary'
-      ? 'Contemporary beta · modern Office prayers and collects; 1662 canticles retained.'
+      ? 'Contemporary Office text from An English Prayer Book (1994). Canticles and collects remain in 1662 wording where no supplied contemporary source is available.'
       : 'Original 1662 Prayer Book language.';
   }
 }
