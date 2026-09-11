@@ -1,8 +1,8 @@
-const CACHE = 'pray1662-v0.8.3';
+const CACHE = 'pray1662-v0.9.0';
 const ASSETS = [
-  './index.html','./manifest.webmanifest','./src/app.js','./src/lite-ui.js','./src/styles.css','./src/calendar.js','./src/office.js','./src/year-calendar.js',
+  './index.html','./manifest.webmanifest','./src/app.js','./src/lite-ui.js','./src/language-ui.js','./src/styles.css','./src/calendar.js','./src/office.js','./src/year-calendar.js',
   './src/year-coverage.js','./data/reading-plans.js','./data/mcheyne.js','./data/common-worship.js',
-  './data/psalter.js','./data/lectionary.js','./data/ordinary-lessons.js','./data/liturgy.js',
+  './data/psalter.js','./data/lectionary.js','./data/ordinary-lessons.js','./data/liturgy.js','./data/contemporary-liturgy.js',
   './data/marginalia.js','./data/collects.js','./icons/icon.svg','./icons/icon-192.png','./icons/icon-512.png'
 ];
 
