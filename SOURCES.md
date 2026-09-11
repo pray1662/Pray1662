@@ -1,4 +1,4 @@
-# Sources and verification notes — Pray1662 V0.8
+# Sources and verification notes — Pray1662 V0.9
 
 ## 1662 Book of Common Prayer
 
@@ -14,11 +14,17 @@ The original lesson table, Sunday/Holy-Day proper lessons, proper Psalms and 30-
 
 ## An English Prayer Book — contemporary language
 
-Contemporary-language material for Pray1662 is drawn from *An English Prayer Book* (Church Society, 1994), used with the permission of Church Society. Church Society asked that its material be appropriately acknowledged and welcomed a link to its website:
+Church Society has given Pray1662 permission to use contemporary-language material from *An English Prayer Book* (1994), provided it is appropriately acknowledged; Church Society also welcomed a link to its website:
 
 - https://www.churchsociety.org/
 
-This permission relates to Church Society’s contemporary-language material and does not alter the separate rights considerations for the 1662 Book of Common Prayer or Common Worship material.
+Church Society publishes resources from *An English Prayer Book* covering Morning and Evening Prayer, canticles, prayers and thanksgivings, and collects. These resources have been used to verify the intended structure, register and theological continuity of the contemporary-language mode.
+
+**V0.9 implementation status:** the app now ships a working contemporary-language beta for the principal fixed Office prayers and a reversible modern-language rendering of the existing collect dataset. The exact complete published AEPB canticle text has not yet been imported into the repository. Until that source is supplied directly for transcription, V0.9 deliberately retains the existing 1662 wording for Venite, Te Deum, Benedicite, Benedictus, Magnificat and Nunc dimittis rather than presenting an approximation as the published AEPB text.
+
+The 1662 layer remains separate and unchanged. Language selection is persisted locally and can be reversed without modifying the source datasets. Lite mode’s dated opening sentences and Comfortable Words remain in their deliberately specified 1662 wording.
+
+Church Society’s permission relates to its contemporary-language material and does not alter the separate rights considerations for the 1662 Book of Common Prayer or Common Worship material.
 
 ## Scripture
 
@@ -26,11 +32,11 @@ Pray1662 stores Scripture **references only**. It does not reproduce Bible text 
 
 ## M’Cheyne Bible Reading Plan
 
-The V0.8 dataset was transcribed against the complete Robert Murray M’Cheyne calendar displayed at:
+The dataset was transcribed against the complete Robert Murray M’Cheyne calendar displayed at:
 
 - https://www.mcheyneplan.com/calendar.html
 
-The plan’s four daily readings are presented there as two **Family** readings and two **Secret** readings. Pray1662 maps Family to Morning Prayer and Secret/Personal to Evening Prayer. Representative dates and the complete 365-key dataset are covered by automated tests. The plan is calendar-based and has no original 29 February row, so V0.8 treats leap day as a catch-up day rather than shifting later appointments.
+The plan’s four daily readings are presented there as two **Family** readings and two **Secret** readings. Pray1662 maps Family to Morning Prayer and Secret/Personal to Evening Prayer. Representative dates and the complete 365-key dataset are covered by automated tests. The plan is calendar-based and has no original 29 February row, so Pray1662 treats leap day as a catch-up day rather than shifting later appointments.
 
 ## Common Worship Daily Prayer lectionary
 
@@ -40,7 +46,7 @@ Church of England material confirms that Common Worship Daily Prayer uses an aut
 - https://www.churchofengland.org/prayer-and-worship/worship-texts-and-resources/common-worship/churchs-year/lectionary
 - https://www.churchofengland.org/prayer-and-worship/common-worship-publications
 
-Our research audit found canonical alternatives printed alongside the Apocryphal appointments examined in the Morning/Evening Prayer weekday table. Nevertheless, **V0.8 does not ship a partial or reconstructed Common Worship dataset**. `data/common-worship.js` intentionally throws if called and the UI option is disabled until a complete authoritative import has been verified.
+Our research audit found canonical alternatives printed alongside the Apocryphal appointments examined in the Morning/Evening Prayer weekday table. Nevertheless, Pray1662 does not ship a partial or reconstructed Common Worship dataset. `data/common-worship.js` intentionally throws if called and the UI option is disabled until a complete authoritative import has been verified.
 
 Common Worship Second/Third Service and Weekday Lectionary material is copyright the Archbishops’ Council. Permission should be resolved before public app distribution of that full dataset.
 
