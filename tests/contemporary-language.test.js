@@ -2,9 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { fixed } from '../data/liturgy.js';
 import { contemporaryFixed } from '../data/contemporary-liturgy.js';
+import { contemporaryCanticles } from '../data/contemporary-canticles.js';
 
-test('contemporary fixed layer only overrides existing Prayer Book blocks', () => {
-  for (const id of Object.keys(contemporaryFixed)) assert.ok(fixed[id], `Unknown fixed block: ${id}`);
+test('contemporary fixed and canticle layers only override existing Prayer Book blocks', () => {
+  for (const id of [...Object.keys(contemporaryFixed), ...Object.keys(contemporaryCanticles)]) {
+    assert.ok(fixed[id], `Unknown fixed block: ${id}`);
+  }
 });
 
 test('contemporary confession uses supplied AEPB wording', () => {
@@ -38,7 +41,16 @@ test('current sovereign is substituted into the supplied monarch form', () => {
   assert.match(contemporaryFixed.king.content[0].text, /King Charles/);
 });
 
-test('canticles and collects are not synthetically modernised', () => {
-  assert.equal(contemporaryFixed.venite, undefined);
+test('supplied AEPB canticles are imported into the contemporary layer', () => {
+  assert.match(contemporaryCanticles.benedictus.content.map(x => x.text).join(' '), /horn of salvation/);
+  assert.match(contemporaryCanticles.magnificat.content[0].text, /My soul glorifies the Lord/);
+  assert.match(contemporaryCanticles.nuncDimittis.content[0].text, /Sovereign Lord, as you have promised/);
+  assert.match(contemporaryCanticles.teDeum.content.map(x => x.text).join(' '), /white-robed army of martyrs/);
+  assert.equal(contemporaryCanticles.benedicite.title, 'A Song of Creation');
+  assert.match(contemporaryCanticles.benedicite.content[0].text, /Bless the Lord all created things/);
+});
+
+test('Venite remains 1662 until a complete contemporary source is supplied', () => {
+  assert.equal(contemporaryCanticles.venite, undefined);
   assert.match(fixed.venite.content[0].text, /O come, let us sing unto the Lord/);
 });
