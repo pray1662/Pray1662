@@ -1,23 +1,26 @@
 import { fixed } from '../data/liturgy.js';
 import { contemporaryFixed } from '../data/contemporary-liturgy.js';
+import { contemporaryCanticles } from '../data/contemporary-canticles.js';
 
 const STORAGE_KEY = 'pray1662-language';
+const contemporaryText = { ...contemporaryFixed, ...contemporaryCanticles };
+
+function clone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
 const traditionalFixed = Object.fromEntries(
-  Object.keys(contemporaryFixed).map(id => [id, JSON.parse(JSON.stringify(fixed[id]))])
+  Object.keys(contemporaryText).map(id => [id, clone(fixed[id])])
 );
 
 function selectedLanguage() {
   return localStorage.getItem(STORAGE_KEY) === 'contemporary' ? 'contemporary' : 'traditional';
 }
 
-function clone(value) {
-  return JSON.parse(JSON.stringify(value));
-}
-
 function applyLanguage(language) {
   const contemporary = language === 'contemporary';
-  for (const id of Object.keys(contemporaryFixed)) {
-    fixed[id] = clone(contemporary ? contemporaryFixed[id] : traditionalFixed[id]);
+  for (const id of Object.keys(contemporaryText)) {
+    fixed[id] = clone(contemporary ? contemporaryText[id] : traditionalFixed[id]);
   }
   document.documentElement.dataset.language = language;
 }
@@ -41,7 +44,7 @@ function installLanguageControls() {
   const note = section.querySelector('.menu-note');
   if (note) {
     note.textContent = language === 'contemporary'
-      ? 'Contemporary Office text from An English Prayer Book (1994). Canticles and collects remain in 1662 wording where no supplied contemporary source is available.'
+      ? 'Contemporary Office text and supplied canticles from An English Prayer Book (1994). Venite and collects remain in 1662 wording until matching contemporary source text is supplied.'
       : 'Original 1662 Prayer Book language.';
   }
 }
