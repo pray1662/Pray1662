@@ -12,6 +12,14 @@ The original lesson table, Sunday/Holy-Day proper lessons, proper Psalms and 30-
 
 **Rights note:** substantial BCP reproduction in the United Kingdom has Crown-rights / King’s Printer considerations. Pray1662 remains a development beta while the relevant permission is clarified.
 
+## An English Prayer Book — contemporary language
+
+Contemporary-language material for Pray1662 is drawn from *An English Prayer Book* (Church Society, 1994), used with the permission of Church Society. Church Society asked that its material be appropriately acknowledged and welcomed a link to its website:
+
+- https://www.churchsociety.org/
+
+This permission relates to Church Society’s contemporary-language material and does not alter the separate rights considerations for the 1662 Book of Common Prayer or Common Worship material.
+
 ## Scripture
 
 Pray1662 stores Scripture **references only**. It does not reproduce Bible text and is intentionally designed to be used with a physical Bible.
